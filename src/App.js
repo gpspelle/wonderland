@@ -25,9 +25,9 @@ function App() {
 
   // Declaration du token
   const [isLoggedIn, setIsLoggedIn]= useState(loadToken() === null);
-  const saveAndUpdateToken = (newToken) => {
+  const saveAndUpdateToken = (newToken, loggedIn) => {
     saveToken(newToken);
-    setIsLoggedIn(true);
+    setIsLoggedIn(loggedIn);
   }
 
   let props = {

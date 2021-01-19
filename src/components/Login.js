@@ -14,7 +14,7 @@ const Login = (props) => {
       `Logged in successfully welcome ${res.profileObj.name}.\n 😍 \n`
     );*/
 
-    props.saveToken(res.profileObj);
+    props.saveToken(res.profileObj, true);
     refreshTokenSetup(res);
   };
 

@@ -7,7 +7,8 @@ const clientId =
 const Logout = (props) => {
   const onSuccess = () => {
     console.log('Logout made successfully');
-    alert('Logout made successfully.\n ✌ \n');
+    //alert('Logout made successfully.\n ✌ \n');
+    props.saveToken(null, false);
     props.clearLocalStorage();
   };
 
