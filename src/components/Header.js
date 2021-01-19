@@ -3,6 +3,7 @@ import './Header.css';
 import Logo from './Logo.js';
 import './Logo.css';
 import { loadToken } from '../localStorage';
+
 function Header() {
 
   const persistedToken = loadToken();
