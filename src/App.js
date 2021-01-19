@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import './App.css';
 
@@ -23,18 +23,21 @@ const persistedToken = loadToken();
 
 function App() {
 
-  const store = createStore(updateReducer, persistedToken);
+  // Declaration du token
+  const [isLoggedIn, setIsLoggedIn]= useState(loadToken() === null);
+  const saveAndUpdateToken = (newToken) => {
+    saveToken(newToken);
+    setIsLoggedIn(true);
+  }
 
   let props = {
-    saveToken: saveToken,
-    clearLocalStorage: clearLocalStorage
-  };
+      saveToken: saveAndUpdateToken,
+      clearLocalStorage: clearLocalStorage
+    };
 
-  if(persistedToken == null) {
-    return <Login {...props} />
-  };
-  return (
+  const store = createStore(updateReducer, persistedToken);
 
+  return !isLoggedIn ? <Login {...props} /> :
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
@@ -46,7 +49,6 @@ function App() {
         <Logout {...props} />
       </BrowserRouter>
     </Provider>
-  );
 }
 
 export default App;
