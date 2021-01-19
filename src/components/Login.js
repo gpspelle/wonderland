@@ -1,21 +1,20 @@
 import React from 'react';
 
 import { GoogleLogin } from 'react-google-login';
-// refresh token
 import { refreshTokenSetup } from '../utils/refreshToken';
 
 const clientId =
   '707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com';
 
 
-export default function Login({ setToken }) {
+const Login = (props) => {
   const onSuccess = (res) => {
     console.log('Login Success: currentUser:', res.profileObj);
-    alert(
+    /*alert(
       `Logged in successfully welcome ${res.profileObj.name}.\n 😍 \n`
-    );
+    );*/
 
-    setToken(res.profileObj.name);
+    props.saveToken(res.profileObj);
     refreshTokenSetup(res);
   };
 
@@ -39,4 +38,6 @@ export default function Login({ setToken }) {
       />
     </div>
   );
-}
+};
+
+export default Login;

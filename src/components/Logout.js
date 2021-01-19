@@ -4,12 +4,13 @@ import { GoogleLogout } from 'react-google-login';
 const clientId =
   '707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com';
 
-function Logout({setToken}) {
+const Logout = (props) => {
   const onSuccess = () => {
     console.log('Logout made successfully');
-    alert('Logout made successfully ✌');
-    setToken(null);
+    alert('Logout made successfully.\n ✌ \n');
+    props.clearLocalStorage();
   };
+
 
   return (
     <div>

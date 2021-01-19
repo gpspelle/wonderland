@@ -1,15 +1,13 @@
 .App {
     text-align: center;
 }
-  
-.App-header {
-    background-color: #ffffff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: rgb(158, 1, 1);
+
+.content {
+    margin-top: 50px;
+}
+
+.sticky-wrapper {
+    position: fixed;
+    height: 3rem; /* We need to change this value */
 }
   
