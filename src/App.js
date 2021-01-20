@@ -21,9 +21,9 @@ function updateReducer(token, action) {
 
 const persistedToken = loadToken();
 
-function App() {
+function App () {
 
-  // Declaration du token
+  // Token declaration
   const [isLoggedIn, setIsLoggedIn]= useState(loadToken() === null);
   const saveAndUpdateToken = (newToken, loggedIn) => {
     saveToken(newToken);
