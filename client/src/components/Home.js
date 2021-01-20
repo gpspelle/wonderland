@@ -7,6 +7,8 @@ class Home extends React.Component {
 
   state = {
     response: '',
+    post: '',
+    responseToPost: ''
   };
   
   componentDidMount = () => {
@@ -23,6 +25,21 @@ class Home extends React.Component {
     return body;
   };
 
+  handleSubmit = async e => {
+    e.preventDefault();
+    const response = await fetch('/api/name-to-ticker', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: this.state.post }),
+    });
+
+    const body = await response.text();
+    
+    this.setState({ responseToPost: body });
+  };
+
   /*state = {
     stocks: [
       "BTC", "XRP", "NAS.OL", "PLTR", "GOOG" 
@@ -30,23 +47,30 @@ class Home extends React.Component {
     searchTerm: ''
   }*/
 
-  editSearchTerm = (e) => {
+  /*editSearchTerm = (e) => {
     this.setState({searchTerm: e.target.value})
   }
 
   dynamicSearch = () => {
     return this.state.stocks.filter(stock => stock.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
   }
-
+  */
   render() {
     return (
         <div className="App">
           <Header/>
           <div className="content" style = {{textAlign: 'center', paddingTop: '30vh'}}>
-              <input type= 'text' value = {this.state.searchTerm} onChange = {this.editSearchTerm} placeholder = 'Search for a stock!'/>
-              <br></br>
-              <h3>These are some important stocks:</h3>
-              <p>{this.state.response}</p>
+              <form onSubmit={this.handleSubmit}>
+                <input
+                  type="text"
+                  value={this.state.post}
+                  onChange={e => this.setState({ post: e.target.value })}
+                  placeholder="Search for a company"
+                />
+                <button type="submit">Submit</button>
+              </form>
+              <br />
+              <p>{this.state.responseToPost}</p>
           </div>
         </div>
     );
