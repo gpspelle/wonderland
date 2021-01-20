@@ -1,0 +1,13 @@
+.App {
+    text-align: center;
+}
+
+.content {
+    margin-top: 50px;
+}
+
+.sticky-wrapper {
+    position: fixed;
+    height: 3rem; /* We need to change this value */
+}
+  

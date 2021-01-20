@@ -1,0 +1,42 @@
+.header-wrap {
+    position: fixed;
+    height: 50px;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+}
+
+.sticky-inner-left-alice {
+    position: fixed;
+    top: 15px;
+    left: 52px;
+    z-index: 1;
+    margin: 0px;
+}
+
+.sticky-inner-left-logo {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    margin: 0px;
+}
+
+
+.sticky-inner-right-logo {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+    margin: 0px;
+}
+
+
+.sticky-inner-right-name {
+    position: fixed;
+    top: 15px;
+    right: 60px;
+    z-index: 1;
+    margin: 0px;
+}
