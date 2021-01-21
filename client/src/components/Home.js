@@ -1,14 +1,17 @@
 import React from 'react';
 import Header from './Header.js';
-import NamesContainer from './NamesContainer';
 import './Home.css';
+import Plot from 'react-plotly.js';
 
 class Home extends React.Component {
 
   state = {
     response: '',
     post: '',
-    responseToPost: ''
+    website: '',
+    ticker: 'None',
+    data: '',
+    layout: ''
   };
   
   componentDidMount = () => {
@@ -34,10 +37,13 @@ class Home extends React.Component {
       },
       body: JSON.stringify({ name: this.state.post }),
     });
-
-    const body = await response.text();
     
-    this.setState({ responseToPost: body });
+    const body = await response.json();
+
+    this.setState({ ticker: body.ticker,
+                    website: body.website,
+                    data: body.data,
+                    layout: body.layout });
   };
 
   /*state = {
@@ -70,7 +76,14 @@ class Home extends React.Component {
                 <button type="submit">Submit</button>
               </form>
               <br />
-              <p>{this.state.responseToPost}</p>
+              <p>Stock code: {this.state.ticker}</p>
+              <a href={this.state.website}>{this.state.website}</a>
+              <Plot
+                data={this.state.data}
+                layout={this.state.layout}
+                onInitialized={(figure) => this.setState(figure)}
+                onUpdate={(figure) => this.setState(figure)}
+              />
           </div>
         </div>
     );
@@ -78,6 +91,5 @@ class Home extends React.Component {
 }
 
 //<NamesContainer names = {this.dynamicSearch()}/>
-
 
 export default Home;
