@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,11 +23,8 @@ app.post('/api/world', (req, res) => {
   );
 });
 
-googleSearchAPIKey="AIzaSyAYmR1gjWmclkzP_JmKUistbr_vr3jejUg"
-googleSearchEngineCx="38a29663410f9346d"
-
 app.post('/api/name-to-ticker', (req, res) => {
-  axios.get(`https://www.googleapis.com/customsearch/v1?key=${googleSearchAPIKey}&cx=${googleSearchEngineCx}&q=yahoo+finance+${req.body.name}&num=1`)
+  axios.get(`https://www.googleapis.com/customsearch/v1?key=${process.env.googleSearchAPIKey}&cx=${process.env.googleSearchEngineCx}&q=yahoo+finance+${req.body.name}&num=1`)
     .then(response => {
       const url = JSON.stringify(response.data.items[0].link);
       const parts = url.split('/');
