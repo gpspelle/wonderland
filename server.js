@@ -29,7 +29,7 @@ app.post('/api/world', (req, res) => {
 app.post('/api/name-to-ticker', (req, res) => {
   (async () => { 
     try {
-      const search = await axios.get(`https://www.googleapis.com/customsearch/v1?key=${process.env.googleSearchAPIKey}&cx=${process.env.googleSearchEngineCx}&q=yahoo+finance+${req.body.name}&num=1`);
+      const search = await axios.get(`https://www.googleapis.com/customsearch/v1?key=${process.env.googleSearchAPIKey}&cx=${process.env.googleSearchEngineCx}&q=yahoo+finance+${req.body.companyName}&num=1`);
       const url = await search.data.items[0].link;
       const parts = await url.split('/');
       const ticker = await parts[parts.length - 2]; // -2 because the url ends in / (trailing slash)
@@ -39,20 +39,23 @@ app.post('/api/name-to-ticker', (req, res) => {
       var day = dateObj.getUTCDate();
       var year = dateObj.getUTCFullYear();
 
-      const dateObj_5daysAgo = new Date();
-      dateObj_5daysAgo.setDate(dateObj.getDate()-5);
-      var month_5daysAgo = dateObj_5daysAgo.getUTCMonth();
-      var day_5daysAgo = dateObj_5daysAgo.getUTCDate();
-      var year_5daysAgo = dateObj_5daysAgo.getUTCFullYear();
-      const prices = await yahooStockPrices.getHistoricalPrices(month_5daysAgo, day_5daysAgo, year_5daysAgo, month, day, year, ticker, '1d');
+      const dateObjPast = new Date();
+      dateObjPast.setDate(dateObj.getDate()-req.body.nDays);
+      var monthPast = dateObjPast.getUTCMonth();
+      var dayPast = dateObjPast.getUTCDate();
+      var yearPast = dateObjPast.getUTCFullYear();
+      const prices = await yahooStockPrices.getHistoricalPrices(monthPast, dayPast, yearPast, month, day, year, ticker, '1d');
       
+      console.log(req.body.nDays);
+
       var x = [];
       var y = [];
       prices.forEach(function(stock_daily){
-        x.push(new Date(stock_daily.date));
+        x.push(new Date(stock_daily.date * 1000));
         y.push(stock_daily.open);
       });
 
+      console.log(x);
       const data = [{x:x, y:y, type: 'scatter'}];
       const layout = {fileopt : "overwrite", filename : "simple-node-example"};
       

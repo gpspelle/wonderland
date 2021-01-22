@@ -2,16 +2,19 @@ import React from 'react';
 import Header from './Header.js';
 import './Home.css';
 import Plot from 'react-plotly.js';
+import Select from "react-dropdown-select";
+import { options } from "./options";
 
 class Home extends React.Component {
 
   state = {
     response: '',
-    post: '',
+    companyName: '',
     website: '',
     ticker: 'None',
-    data: '',
-    layout: ''
+    data: [],
+    layout: null,
+    nDays: 30
   };
   
   componentDidMount = () => {
@@ -35,7 +38,8 @@ class Home extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: this.state.post }),
+      body: JSON.stringify({  companyName: this.state.companyName,
+                              nDays: this.state.nDays }),
     });
     
     const body = await response.json();
@@ -46,21 +50,10 @@ class Home extends React.Component {
                     layout: body.layout });
   };
 
-  /*state = {
-    stocks: [
-      "BTC", "XRP", "NAS.OL", "PLTR", "GOOG" 
-    ],
-    searchTerm: ''
-  }*/
-
-  /*editSearchTerm = (e) => {
-    this.setState({searchTerm: e.target.value})
+  handleSelectPeriod = async e => {
+    this.setState({ nDays: e[0].nDays })
   }
 
-  dynamicSearch = () => {
-    return this.state.stocks.filter(stock => stock.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
-  }
-  */
   render() {
     return (
         <div className="App">
@@ -69,13 +62,20 @@ class Home extends React.Component {
               <form onSubmit={this.handleSubmit}>
                 <input
                   type="text"
-                  value={this.state.post}
-                  onChange={e => this.setState({ post: e.target.value })}
+                  value={this.state.companyName}
+                  onChange={e => this.setState({ companyName: e.target.value })}
                   placeholder="Search for a company"
                 />
                 <button type="submit">Submit</button>
               </form>
               <br />
+             
+              <Select placeholder="Time frequency" 
+                      options={options}
+                      onChange={e => this.handleSelectPeriod(e)}
+                      labelField={"period"}
+                      values={[options.find(opt => opt.period === "1mo")]}
+              />
               <p>Stock code: {this.state.ticker}</p>
               <a href={this.state.website}>{this.state.website}</a>
               <Plot
