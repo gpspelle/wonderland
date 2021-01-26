@@ -14,7 +14,6 @@
     "google-search-results-nodejs": "^2.0.1",
     "plotly": "^1.0.6",
     "plotly.js": "^1.58.4",
-    "react-dropdown-select": "^4.7.3",
     "react-plotly.js": "^2.5.1",
     "yahoo-stock-prices": "^1.1.0"
   },

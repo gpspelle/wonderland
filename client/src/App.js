@@ -45,7 +45,6 @@ function App () {
         </Switch>
         <Home/>
         <br />
-        
         <Logout {...props} />
       </BrowserRouter>
     </Provider>

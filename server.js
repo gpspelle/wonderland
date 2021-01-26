@@ -15,70 +15,66 @@ const axios = require('axios');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
-});
+const dateObj = new Date();
+const month = dateObj.getUTCMonth(); // months from 0 to 11
+const day = dateObj.getUTCDate();
+const year = dateObj.getUTCFullYear();
 
-app.post('/api/world', (req, res) => {
-  console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`,
-  );
-});
+const dateObjPast = new Date();
+dateObjPast.setDate(dateObj.getDate()-36500);
+const monthPast = dateObjPast.getUTCMonth();
+const dayPast = dateObjPast.getUTCDate();
+const yearPast = dateObjPast.getUTCFullYear();
 
-app.post('/api/name-to-ticker', (req, res) => {
+app.post('/api/company-name-to-ticker', (req, res) => {
   (async () => { 
     try {
       const search = await axios.get(`https://www.googleapis.com/customsearch/v1?key=${process.env.googleSearchAPIKey}&cx=${process.env.googleSearchEngineCx}&q=yahoo+finance+${req.body.companyName}&num=1`);
-      const url = await search.data.items[0].link;
-      const parts = await url.split('/');
-      const ticker = await parts[parts.length - 2]; // -2 because the url ends in / (trailing slash)
+      const website = await search.data.items[0].link;
+      const parts = await website.split('/');
 
-      const dateObj = new Date();
-      var month = dateObj.getUTCMonth(); // months from 0 to 11
-      var day = dateObj.getUTCDate();
-      var year = dateObj.getUTCFullYear();
+      if (website.endsWith("/")) {
+        var ticker = await parts[parts.length - 2]; // -2 because the url ends in / (trailing slash)
+      } else {
+        var ticker = await parts[parts.length - 1];
+      }
 
-      const dateObjPast = new Date();
-      dateObjPast.setDate(dateObj.getDate()-req.body.nDays);
-      var monthPast = dateObjPast.getUTCMonth();
-      var dayPast = dateObjPast.getUTCDate();
-      var yearPast = dateObjPast.getUTCFullYear();
-      const prices = await yahooStockPrices.getHistoricalPrices(monthPast, dayPast, yearPast, month, day, year, ticker, '1d');
+      res.json( { "ticker": ticker, 
+                  "website": website })
+
+    } catch (error) {
+      console.log(error);
+    }
       
-      console.log(req.body.nDays);
+  })();
+});
 
+app.post('/api/ticker-to-data', (req, res) => {
+  (async () => { 
+    try {
+      
+      console.log(req.body.ticker);
+      console.log(req.body.ticker);
+
+      const prices = await yahooStockPrices.getHistoricalPrices(monthPast, dayPast, yearPast, month, day, year, req.body.ticker, '1d');
+      
       var x = [];
       var y = [];
-      prices.forEach(function(stock_daily){
-        x.push(new Date(stock_daily.date * 1000));
-        y.push(stock_daily.open);
+      prices.forEach(function(stockDaily){
+        x.push(new Date(stockDaily.date * 1000));
+        y.push(stockDaily.open);
       });
 
-      console.log(x);
       const data = [{x:x, y:y, type: 'scatter'}];
       const layout = {fileopt : "overwrite", filename : "simple-node-example"};
       
-      res.json({"ticker": ticker,
-                "website": url,
-                "data": data,
-                "layout": layout});
+      res.json({ "data": data,
+                 "layout": layout});
 
     } catch (error) {
       console.log(error);
     }
   })();
 });
-
-app.post('/api/plotly-bar', (req, res) => {
-  var data = [{x:[0,1,2], y:[3,2,1], type: 'bar'}];
-  var layout = {fileopt : "overwrite", filename : "simple-node-example"};
-  
-  plotly.plot(data, layout, function (err, msg) {
-    if (err) return console.log(err);
-    console.log(msg);
-  });
-});
-
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
