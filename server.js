@@ -5,7 +5,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const yahooStockPrices = require('yahoo-stock-prices');
-const plotly = require('plotly')({"username": process.env.plotlyUser, "apiKey": process.env.plotlyAPIKey})
 
 const app = express();
 const port = process.env.PORT || 5000;
